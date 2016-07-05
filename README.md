@@ -128,7 +128,10 @@ The admin dashboard is heavily customisable. Most of the possibilities are repre
               {label: 'User', name: 'owner', template: 'userEmail'}
             ]
             showWidget: false
-        }
+            routes:
+              view:
+                disabled: true
+        },
     autoForm:
         omitFields: ['createdAt', 'updatedAt']
     dashboard:
