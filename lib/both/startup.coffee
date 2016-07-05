@@ -34,6 +34,9 @@ adminTablePubName = (collection) ->
 
 adminCreateTables = (collections) ->
 	_.each AdminConfig?.collections, (collection, name) ->
+		if not checkRouteEnabled('view')(collection)
+			return
+			
 		_.defaults collection, {
 			showEditColumn: true
 			showDelColumn: true
@@ -69,10 +72,18 @@ adminCreateTables = (collections) ->
 			selector: collection.selector || ->
 				return {}
 
+checkRouteEnabled = (route) ->
+	(collection) -> not collection.routes?[route]? or not collection.routes?[route].disabled?
+
 adminCreateRoutes = (collections) ->
-	_.each collections, adminCreateRouteView
-	_.each collections,	adminCreateRouteNew
-	_.each collections, adminCreateRouteEdit
+
+	_.each collections, (collection, collectionName) ->
+		if checkRouteEnabled('view')(collection)
+			adminCreateRouteView collection, collectionName
+		if checkRouteEnabled('new')(collection)
+			adminCreateRouteNew collection, collectionName
+		if checkRouteEnabled('edit')(collection)
+			adminCreateRouteEdit collection, collectionName
 
 adminCreateRouteView = (collection, collectionName) ->
 	Router.route "adminDashboard#{collectionName}View",

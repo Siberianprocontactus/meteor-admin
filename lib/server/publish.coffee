@@ -35,6 +35,7 @@ Meteor.publish 'adminCollectionsCount', ->
 		id = new Mongo.ObjectID
 		count = 1
 		table = AdminTables[name]
+		return if not table
 		ready = false
 		selector = if table.selector then table.selector(self.userId) else {}
 		handles.push table.collection.find(selector).observeChanges

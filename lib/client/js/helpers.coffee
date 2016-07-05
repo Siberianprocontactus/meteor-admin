@@ -14,9 +14,12 @@ adminCollections = ->
 	_.map collections, (obj, key) ->
 		obj = _.extend obj, {name: key}
 		obj = _.defaults obj, {label: key, icon: 'plus', color: 'blue'}
-		obj = _.extend obj,
-			viewPath: Router.path "adminDashboard#{key}View"
-			newPath: Router.path "adminDashboard#{key}New"
+		if not obj.routes?.view? or not obj.routes?.view?.disabled?
+			obj = _.extend obj,
+				viewPath: Router.path "adminDashboard#{key}View"
+		if not obj.routes?.new? or not obj.routes?.new?.disabled?
+			obj = _.extend obj,
+				newPath: Router.path "adminDashboard#{key}New"
 
 UI.registerHelper 'AdminConfig', ->
 	AdminConfig if typeof AdminConfig != 'undefined'
@@ -111,3 +114,6 @@ UI.registerHelper 'adminUserEmail', (user) ->
 		user.services.facebook.email
 	else if user && user.services && user.services.google && user.services.google.email
 		user.services.google.email
+
+UI.registerHelper 'adminCollectionRouteEnabled', (collection, route) ->
+	not collection.routes?[route]? or not collection.routes?[route].disabled?
