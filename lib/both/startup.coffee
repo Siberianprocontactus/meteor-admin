@@ -76,8 +76,8 @@ checkRouteEnabled = (route) ->
 	(collection) -> not collection.routes?[route]? or not collection.routes?[route].disabled?
 
 adminCreateRoutes = (collections) ->
-
 	_.each collections, (collection, collectionName) ->
+		return if collectionName == 'Users'
 		if checkRouteEnabled('view')(collection)
 			adminCreateRouteView collection, collectionName
 		if checkRouteEnabled('new')(collection)
